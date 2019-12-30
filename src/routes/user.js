@@ -161,30 +161,32 @@ router.get('/checkout', auth, role_user, (req, res)=>{
         res.send({success : true, Your_cart : result, Payment : result1})
     })
 })
+})
 /* ------------------------------------------------------------------------------------------*/
 
-router.put('/cart/update/:id_item/:id_user', auth, role_user, (req, res)=>{
-    const {id_item, id_user} = req.params
+router.put('/cart/update/:username/:id_item', auth, role_user, (req, res)=>{
+    const {id_item, username} = req.params
     const {quantity} = req.body
-    const sql = `UPDATE cart SET quantity = ? WHERE id_item = ? AND id_user = ?`
-    mysql.execute(sql, [quantity, id_item, id_user], (err, result, field)=>{
+    const sql = `UPDATE cart SET quantity = ? WHERE id_item = ? AND username = ?`
+    mysql.execute(sql, [quantity, id_item, username], (err, result, field)=>{
+                console.log(err)
                 const sql1 = 'SELECT quantity FROM cart WHERE id_item = ?'
                 mysql.execute(sql1, [id_item], (err, result1, field)=>{
                     const qty = result1[0].quantity
+                    console.log(qty)
                     const sql2 = `SELECT price from cart where id_item = ?`
                     mysql.execute(sql2, [id_item], (err, result2, field)=>{
                         const prc = result2[0].price
                         const tot = qty * prc
-                        console.log(tot, id_item, id_user)
-                        mysql.execute(`UPDATE cart SET total = ? WHERE id_item = ? AND id_user = ?`, [tot, id_item, id_user], (err, result3, field)=>{
+                        mysql.execute(`UPDATE cart SET total = ? WHERE id_item = ? AND username = ?`, [tot, id_item, username], (err, result3, field)=>{
                             res.send({success : true, data : result3})
+                            
                         })
                     })
                  })
-             
         })
-    })      
-
+    
+    })
 /* update account user */
 router.put('/update/:id', auth, role_user, (req,res)=> { 
     const id_user = req.params.id
@@ -197,7 +199,6 @@ router.put('/update/:id', auth, role_user, (req,res)=> {
             res.send(result)
                 })
     })
-})
 
     /* ------------------------------------------------------------------------------------------*/
 

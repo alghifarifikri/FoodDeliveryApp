@@ -23,6 +23,7 @@ const auth = (req, res, next)=>{
                 } else {
                     try{
                         const user = jwt.verify(jwt_token, process.env.APP_KEY)
+                        // req.auth = user
                         next()
                     } catch (e) {
                         res.send({

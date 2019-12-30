@@ -235,9 +235,10 @@ router.get('/sort/asc', (req,res)=>{
         })
     }  else if (updated_on){
         const sql = `SELECT name, price, item_data.descriptions, image, rating, name_resto from item_data 
-                     INNER JOIN restaurant_data on restaurant_data.id_resto = item_data.id_resto ORDER BY updated_on ASC `
+                     INNER JOIN restaurant_data on restaurant_data.id_resto = item_data.id_resto ORDER BY item_data.updated_on ASC `
         mysql.execute(sql, [], (err, result, field)=>{
             res.send(result)
+            console.log(err)
         })
     }  else {
         res.send({
