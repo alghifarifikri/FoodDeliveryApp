@@ -10,10 +10,12 @@ router.post('/login', (req, res)=>{
     const {username, password} = req.body
     const user = `SELECT * FROM user WHERE username = ?`
     mysql.execute(user, [username], (err, result, field)=>{
-        const roles= result[0].id_role
+        
         if(result.length > 0){
             if(bcrypt.compareSync(password, result[0].password)){
-                const auth = jwt.sign({username}, process.env.APP_KEY)
+                const roles = result[0].id_role
+                const id = result[0].id_user
+                const auth = jwt.sign({username, id, roles}, process.env.APP_KEY)
                 created_on = new Date()
                 updated_on = new Date()
                 const token = auth
@@ -72,59 +74,63 @@ router.post('/register', (req, res)=>{
 })
 
 /* input item into carts */
-router.post('/selectitem', auth, role_user, (req, res)=>{ 
-    const {username, id_item, name, name_resto, price, quantity} = req.body
-    const total = price*quantity
+router.post('/selectitem', auth, (req, res)=>{ //jangan lupa kasih auth dan role
+    const {id_user, id_item, quantity} = req.body
     const created_on = new Date()
     const updated_on = new Date()
-    const sql = `INSERT INTO cart (username, id_item, name, name_resto, price, quantity, total, created_on, updated_on) VALUES (?,?,?,?,?,?,?,?,?)`
+    const sql = `INSERT INTO cart (id_user, id_item, quantity, created_on, updated_on) 
+                 VALUES (?,?,?,?,?)`
 
-    mysql.execute(sql, [username, id_item, name, name_resto, price, quantity, total, created_on, updated_on], 
+    mysql.execute(sql, [id_user, id_item, quantity, created_on, updated_on], 
         (err, result, field)=>{
-            console.log(err)
-            res.send(result)      
+            res.send({data : result})      
     })
 })
 
 /* input review */
-router.post('/inputreview', auth, role_user, (req, res)=>{ 
-    const {rating, review, name, id_item, id_user} = req.body
+router.post('/inputreview', auth, (req, res)=>{ //jangan lupa pakai role dan auth
+    const {rating, review, id_item, id_user} = req.body
     const created_on = new Date()
     const updated_on = new Date()
-    const sql = `INSERT INTO review (rating, review, name, id_item, id_user, created_on, updated_on) VALUES (?,?,?,?,?,?,?)`
-    mysql.execute(sql, [rating, review, name, id_item, id_user, created_on, updated_on], (err, resuld, field)=>{
+    const sql = `INSERT INTO review (rating, review, id_item, id_user, created_on, updated_on) VALUES (?,?,?,?,?,?)`
+    mysql.execute(sql, [rating, review, id_item, id_user, created_on, updated_on], (err, resuld, field)=>{
+        // var id_user = resuld[0].id_user
         if(err == null){
             const sql = `SELECT AVG(rating) AS rate from review WHERE id_item = ${id_item}`
             mysql.execute(sql, [], (err, result, field)=>{
                 var rating = result[0].rate
                 if(err == null){
                     const sql = `UPDATE item_data set rating = ${result[0].rate} WHERE id_item = ${id_item} `
-                    mysql.execute(sql, [rating], (err, result, field)=>{
-                        console.log(id_item)
-                        res.send(result)
+                    mysql.execute(sql, [rating], (err, result1, field)=>{
+                        if(err == null){
+                            const sql = `DELETE from cart WHERE id_item = ${id_item} AND id_user = ${id_user}`
+                            mysql.execute(sql, [id_item, id_user], (err, result2, field) =>{
+                                res.send({success: true, result2})
+                            } )
+                        }
+                        
                     })
                 }
             })
-        }
-            res.send(resuld)     
+        } 
     })
 })
 /* ------------------------------------------------------------------------------------------*/
 
 /* select info profile */
-router.get('/profile', auth, role_user, (req, res)=>{
-    const {username} = req.body
-    mysql.execute('SELECT * FROM user WHERE username = ?', [username], (err, result, field)=>{ 
-        res.send(result)
+router.get('/profile/:id_user', (req, res)=>{
+    const {id_user} = req.params
+    mysql.execute('SELECT username, password FROM user WHERE id_user = ?', [id_user], (err, result, field)=>{ 
+        res.send({data : result})
     })
 })
 
-router.get('/menu', auth, role_user, (req, res)=>{
-    const{name_resto} = req.body
-    mysql.execute(`SELECT name_resto, id_item, name, price, item_data.descriptions, image FROM restaurant_data 
+router.get('/menu/:id_resto', (req, res)=>{ //jangan lupa pake auth dan role
+    const {id_resto} = req.params
+    mysql.execute(`SELECT restaurant_data.id_resto, name_resto, id_item, name, price, rating, item_data.descriptions, image FROM restaurant_data 
                    INNER JOIN item_data on item_data.id_resto = restaurant_data.id_resto 
-                   WHERE name_resto = ?`, [name_resto], (err, result, field)=>{
-                        res.send(result)
+                   WHERE restaurant_data.id_resto = ?`, [id_resto], (err, result, field)=>{
+                        res.send({data : result})
                     })
 })
 
@@ -146,44 +152,76 @@ router.get('/menu', auth, role_user, (req, res)=>{
 // })
 
 /* select cart */
-router.get('/cart/', auth, role_user, (req, res)=>{
-    const {username} = req.body
-    mysql.execute(`SELECT username, name, name_resto, price, quantity, total FROM cart WHERE username = ?`, [username], (err, result, field)=>{ 
-        res.send(result)
-    })
+// router.get('/cart/:id_user', (req, res)=>{ //jangan lupa pakai auth dan role
+//     const {id_user} = req.params
+//     mysql.execute(`SELECT item_data.id_item, id_user, item_data.name, price, quantity, FROM item_data 
+//                    INNER JOIN cart on cart.id_item = item_data.id_item WHERE id_user = ?`, [id_user], (err, result, field)=>{
+//                     const count = 
+//         res.send({data : result})
+//     })
+// })
+
+router.get('/cart/:id_user', auth, (req,res)=>{ //jangan lupa kasih auth dan role
+	const {id_user} = req.params
+	mysql.execute(`SELECT item_data.price, cart.quantity FROM cart INNER JOIN item_data on cart.id_item = item_data.id_item WHERE id_user = ?`,[id_user],(err,result1,field)=>{
+		mysql.query(`SELECT COUNT(item_data.price) AS count FROM cart INNER JOIN item_data on cart.id_item = item_data.id_item WHERE id_user = ?`,[id_user],(err,result,field)=>{
+			const count = result[0].count
+				var checkout = 0
+			for(i=0;i < count;i++){
+				var total = result1[i].price * result1[i].quantity
+				checkout += total;
+			}
+            mysql.execute(`SELECT user.username, user.id_user, item_data.id_item, item_data.image, item_data.name, item_data.price, 
+                           cart.quantity, item_data.rating, restaurant_data.name_resto FROM cart
+                           INNER JOIN item_data ON cart.id_item = item_data.id_item
+                           INNER JOIN restaurant_data ON item_data.id_resto = restaurant_data.id_resto
+                           INNER JOIN user ON cart.id_user = user.id_user WHERE cart.id_user = ?`,[id_user],(err1,result,field)=>{
+                               if(err1){
+                                console.log(err1)
+                                res.send({msg: 'errow woy'})
+                            }else(
+                                res.send({
+                                    success : true,
+                                     data : result,
+                                     checkout : checkout
+                                })
+                            )
+			})
+		})
+	})
 })
 
 /* select checkout */
-router.get('/checkout', auth, role_user, (req, res)=>{
-    const {username} = req.body
-    mysql.execute(`SELECT username, id_item, name, name_resto, price, quantity, total FROM cart WHERE username = ?`, [username], (err, result, field)=>{ 
-        mysql.execute(`SELECT SUM (total) as Checkout from cart WHERE username = ?`, [username], (err, result1, field)=>{
+router.get('/checkout/:id_user', (req, res)=>{ //jangan lupa pakai auth dan role
+    const {id_user} = req.params
+    mysql.execute(`SELECT id_user, username, id_item, name, name_resto, price, quantity, total FROM cart WHERE id_user = ?`, [id_user], (err, result, field)=>{ 
+        mysql.execute(`SELECT SUM (total) as Checkout from cart WHERE id_user = ?`, [id_user], (err, result1, field)=>{
         res.send({success : true, Your_cart : result, Payment : result1})
     })
 })
 })
 /* ------------------------------------------------------------------------------------------*/
 
-router.put('/cart/update/:username/:id_item', auth, role_user, (req, res)=>{
-    const {id_item, username} = req.params
+router.put('/cart/update/:id_user/:id_item', (req, res)=>{ //jangan lupa pakai auth dan role
+    const {id_item, id_user} = req.params
     const {quantity} = req.body
-    const sql = `UPDATE cart SET quantity = ? WHERE id_item = ? AND username = ?`
-    mysql.execute(sql, [quantity, id_item, username], (err, result, field)=>{
-                console.log(err)
-                const sql1 = 'SELECT quantity FROM cart WHERE id_item = ?'
-                mysql.execute(sql1, [id_item], (err, result1, field)=>{
-                    const qty = result1[0].quantity
-                    console.log(qty)
-                    const sql2 = `SELECT price from cart where id_item = ?`
-                    mysql.execute(sql2, [id_item], (err, result2, field)=>{
-                        const prc = result2[0].price
-                        const tot = qty * prc
-                        mysql.execute(`UPDATE cart SET total = ? WHERE id_item = ? AND username = ?`, [tot, id_item, username], (err, result3, field)=>{
-                            res.send({success : true, data : result3})
+    const sql = `UPDATE cart SET quantity = ? WHERE id_item = ? AND id_user = ?`
+    mysql.execute(sql, [quantity, id_item, id_user], (err, result, field)=>{
+                res.send({success : true, data : result})
+                // console.log(err)
+                // const sql1 = 'SELECT quantity FROM cart WHERE id_item = ?'
+                // mysql.execute(sql1, [id_item], (err, result1, field)=>{
+                //     const qty = result1[0].quantity
+                //     const sql2 = `SELECT price from cart where id_item = ?`
+                //     mysql.execute(sql2, [id_item], (err, result2, field)=>{
+                //         const prc = result2[0].price
+                //         const tot = qty * prc
+                //         mysql.execute(`UPDATE cart SET total = ? WHERE id_item = ? AND id_user = ?`, [tot, id_item, id_user], (err, result3, field)=>{
+                //             res.send({success : true, data1 : result3})
                             
-                        })
-                    })
-                 })
+                //         })
+                //     })
+                //  })
         })
     
     })
@@ -200,39 +238,42 @@ router.put('/update/:id', auth, role_user, (req,res)=> {
                 })
     })
 
+
     /* ------------------------------------------------------------------------------------------*/
-
+    
     /* delete cart */
-router.delete('/deletecart/:id', auth, role_user, (req, res)=>{
-    const id_user = req.params.id
-    const sql = `DELETE from cart WHERE id_user = ?`
+// router.delete('/deletecart/:id', auth, role_user, (req, res)=>{
+//     const id_user = req.params.id
+//     const sql = `DELETE from cart WHERE id_user = ?`
 
-    mysql.execute(sql, [id_user], (err, result, field)=>{
-        res.send(result)
-    })
-})
+//     mysql.execute(sql, [id_user], (err, result, field)=>{
+//         res.send(result)
+//     })
+// })
 
 /* delete item */
-router.delete('/deleteitem/:id', auth, role_user, (req, res)=>{
-    const id_item = req.params.id
-    const sql = `DELETE from cart WHERE id_item = ?`
+router.delete('/deleteitem/',(req, res)=>{
+    const {id_item, id_user} = req.body
+    console.log(id_user,id_item)
+    const sql = `DELETE from cart WHERE id_item = ? AND id_user = ?`
 
-    mysql.execute(sql, [id_item], (err, result, field)=>{
+    mysql.execute(sql, [id_item, id_user], (err, result, field)=>{
         res.send(result)
     })
 })
 
 /* ------------------------------------------------------------------------------------------*/
 
-router.put('/logout', auth, (req, res)=>{
+router.get('/logout', auth, (req, res)=>{
     const token = req.headers.auth_token
-    const is_revoked = 1
-    const sql = `UPDATE revoked_token set is_revoked = ? WHERE token = ?`
-    mysql.execute(sql, [is_revoked,token], (err, result, field)=>{
-        res.send({result,
+    // const is_revoked = 1
+    const sql = `UPDATE revoked_token set is_revoked = 1 WHERE token = ?`
+    mysql.execute(sql, [token], (err, result, field)=>{
+        res.send({success : true, data : result,
                   msg : req.headers.auth_token})
-        
+                  console.log(err)
     })
+    
 })
 
 // router.get('/review', auth, role_user, (req, res)=>{
