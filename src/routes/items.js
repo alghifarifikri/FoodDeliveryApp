@@ -49,7 +49,6 @@ router.get('/details/:id_item', (req, res)=>{
                       data : resuld,
                       Suggest : result})
         })
-        
     })
 })
 
@@ -461,19 +460,19 @@ router.get('/sort/desc', (req,res)=>{
 router.get('/search', (req, res)=>{
     const {name, price, rating} = req.query
     if (name){
-        const sql = `SELECT name, price, item_data.descriptions, image, rating, name_resto from item_data
+        const sql = `SELECT id_item, name, price, item_data.descriptions, image, rating, name_resto from item_data
                      INNER JOIN restaurant_data on restaurant_data.id_resto = item_data.id_resto WHERE name LIKE '%${name}%'`
         mysql.execute(sql, [], (err, result, field)=>{
             res.send({data: result})
         })
     } else if (price){
-        const sql = `SELECT name, price, item_data.descriptions, image, rating, name_resto from item_data
+        const sql = `SELECT id_item, name, price, item_data.descriptions, image, rating, name_resto from item_data
                      INNER JOIN restaurant_data on restaurant_data.id_resto = item_data.id_resto WHERE price = ${price}`
         mysql.execute(sql, [], (err, result, field)=>{
             res.send({data: result})
         })
     } else if (rating){
-        const sql = `SELECT name, price, item_data.descriptions, image, rating, name_resto from item_data
+        const sql = `SELECT id_item, name, price, item_data.descriptions, image, rating, name_resto from item_data
                      INNER JOIN restaurant_data on restaurant_data.id_resto = item_data.id_resto WHERE rating = ${rating}`
         mysql.execute(sql, [], (err, result, field)=>{
             res.send({data: result})

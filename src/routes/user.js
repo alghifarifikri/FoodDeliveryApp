@@ -73,8 +73,17 @@ router.post('/register', (req, res)=>{
         })
 })
 
+router.put('/forgotpassword', (req, res) => {
+    const {username, password} = req.body
+    const enc_pass = bcrypt.hashSync(password)
+    const sql = `UPDATE user SET password = ? where username = ?`
+    mysql.execute(sql, [enc_pass, username], (err, result, field) => {
+        res.send({succcess: true, data: result})
+    })
+})
+
 /* input item into carts */
-router.post('/selectitem', auth, (req, res)=>{ //jangan lupa kasih auth dan role
+router.post('/selectitem', auth, (req, res)=>{ 
     const {id_user, id_item, quantity} = req.body
     const created_on = new Date()
     const updated_on = new Date()
@@ -88,7 +97,7 @@ router.post('/selectitem', auth, (req, res)=>{ //jangan lupa kasih auth dan role
 })
 
 /* input review */
-router.post('/inputreview', auth, (req, res)=>{ //jangan lupa pakai role dan auth
+router.post('/inputreview', auth, (req, res)=>{
     const {rating, review, id_item, id_user} = req.body
     const created_on = new Date()
     const updated_on = new Date()
@@ -125,7 +134,7 @@ router.get('/profile/:id_user', (req, res)=>{
     })
 })
 
-router.get('/menu/:id_resto', (req, res)=>{ //jangan lupa pake auth dan role
+router.get('/menu/:id_resto', (req, res)=>{ 
     const {id_resto} = req.params
     mysql.execute(`SELECT restaurant_data.id_resto, name_resto, id_item, name, price, rating, item_data.descriptions, image FROM restaurant_data 
                    INNER JOIN item_data on item_data.id_resto = restaurant_data.id_resto 
@@ -134,34 +143,7 @@ router.get('/menu/:id_resto', (req, res)=>{ //jangan lupa pake auth dan role
                     })
 })
 
-// /* select checkout */
-// router.get('/checkout', auth, role_user, (req, res)=>{  
-//     const {username} = req.body
-//     mysql.execute(`SELECT username, SUM (total) from user
-//                    INNER JOIN cart on cart.id_user = user.id_user WHERE username = ?`, [username], (err, result, field)=>{ 
-//         res.send(result)
-//     })
-// })
-
-// /* select cart */
-// router.get('/cart/:id', auth, role_user, (req, res)=>{
-//     const id_user = req.params.id
-//     mysql.execute(`SELECT id_cart, name, name_resto, price, quantity, total FROM cart WHERE id_user = ?`, [id_user], (err, result, field)=>{ 
-//         res.send(result)
-//     })
-// })
-
-/* select cart */
-// router.get('/cart/:id_user', (req, res)=>{ //jangan lupa pakai auth dan role
-//     const {id_user} = req.params
-//     mysql.execute(`SELECT item_data.id_item, id_user, item_data.name, price, quantity, FROM item_data 
-//                    INNER JOIN cart on cart.id_item = item_data.id_item WHERE id_user = ?`, [id_user], (err, result, field)=>{
-//                     const count = 
-//         res.send({data : result})
-//     })
-// })
-
-router.get('/cart/:id_user', auth, (req,res)=>{ //jangan lupa kasih auth dan role
+router.get('/cart/:id_user', auth, (req,res)=>{
 	const {id_user} = req.params
 	mysql.execute(`SELECT item_data.price, cart.quantity FROM cart INNER JOIN item_data on cart.id_item = item_data.id_item WHERE id_user = ?`,[id_user],(err,result1,field)=>{
 		mysql.query(`SELECT COUNT(item_data.price) AS count FROM cart INNER JOIN item_data on cart.id_item = item_data.id_item WHERE id_user = ?`,[id_user],(err,result,field)=>{
@@ -186,13 +168,13 @@ router.get('/cart/:id_user', auth, (req,res)=>{ //jangan lupa kasih auth dan rol
                                      checkout : checkout
                                 })
                             )
-			})
-		})
-	})
-})
+                        })
+                    })
+                })
+            })
 
 /* select checkout */
-router.get('/checkout/:id_user', (req, res)=>{ //jangan lupa pakai auth dan role
+router.get('/checkout/:id_user', (req, res)=>{ 
     const {id_user} = req.params
     mysql.execute(`SELECT id_user, username, id_item, name, name_resto, price, quantity, total FROM cart WHERE id_user = ?`, [id_user], (err, result, field)=>{ 
         mysql.execute(`SELECT SUM (total) as Checkout from cart WHERE id_user = ?`, [id_user], (err, result1, field)=>{
@@ -202,26 +184,12 @@ router.get('/checkout/:id_user', (req, res)=>{ //jangan lupa pakai auth dan role
 })
 /* ------------------------------------------------------------------------------------------*/
 
-router.put('/cart/update/:id_user/:id_item', (req, res)=>{ //jangan lupa pakai auth dan role
+router.put('/cart/update/:id_user/:id_item', (req, res)=>{ 
     const {id_item, id_user} = req.params
     const {quantity} = req.body
     const sql = `UPDATE cart SET quantity = ? WHERE id_item = ? AND id_user = ?`
     mysql.execute(sql, [quantity, id_item, id_user], (err, result, field)=>{
                 res.send({success : true, data : result})
-                // console.log(err)
-                // const sql1 = 'SELECT quantity FROM cart WHERE id_item = ?'
-                // mysql.execute(sql1, [id_item], (err, result1, field)=>{
-                //     const qty = result1[0].quantity
-                //     const sql2 = `SELECT price from cart where id_item = ?`
-                //     mysql.execute(sql2, [id_item], (err, result2, field)=>{
-                //         const prc = result2[0].price
-                //         const tot = qty * prc
-                //         mysql.execute(`UPDATE cart SET total = ? WHERE id_item = ? AND id_user = ?`, [tot, id_item, id_user], (err, result3, field)=>{
-                //             res.send({success : true, data1 : result3})
-                            
-                //         })
-                //     })
-                //  })
         })
     
     })
@@ -240,16 +208,6 @@ router.put('/update/:id', auth, role_user, (req,res)=> {
 
 
     /* ------------------------------------------------------------------------------------------*/
-    
-    /* delete cart */
-// router.delete('/deletecart/:id', auth, role_user, (req, res)=>{
-//     const id_user = req.params.id
-//     const sql = `DELETE from cart WHERE id_user = ?`
-
-//     mysql.execute(sql, [id_user], (err, result, field)=>{
-//         res.send(result)
-//     })
-// })
 
 /* delete item */
 router.delete('/deleteitem/',(req, res)=>{
@@ -275,72 +233,5 @@ router.get('/logout', auth, (req, res)=>{
     })
     
 })
-
-// router.get('/review', auth, role_user, (req, res)=>{
-
-//     const sql = `SELECT * FROM review`
-//     mysql.execute(sql, [], (err, result, field)=>{
-//         res.send(result)
-//     })
-// }) 
- 
-// router.get('/rating/:name', auth, role_user, (req, res)=>{
-//     const name= req.params.id
-//     const sql = `SELECT name, AVG(rating) from review`
-//     mysql.execute(sql, [], (err, result, field)=>{ 
-//         res.send(result)
-// })
-// })
-
-/* ------------------------------------------------------------------------------------------*/
-
-// router.get('/page', (req, res)=>{
-//     const {page, limit} = req.query
-//     if (page == 1){
-//         const initial = page - 1
-//         const sql = 'SELECT * FROM item_data ORDER BY name ASC LIMIT ${intial}, ${limit}'
-//         mysql.execute(sql, [], (err, result, field)=>{
-//             res.send(resuld)
-//         })
-//     } else if (page >= 2){
-//         const initial = page * limit - limit
-//         const sql = 'SELECT * FROM item_data ORDER BY name ASC LIMIT ${intial}, ${limit}'
-//         mysql.execute(sql, [], (err, result, field)=>{
-//             res.send(resuld)
-//         }) 
-//     }
-// })
-
-// /* select item */
-// router.get('/item', auth, role_user, (req, res)=>{  
-//     const {name, price, description, image, name_resto} = req.params
-//     const sql = 'SELECT name, price, description, image, name_resto from item_data INNER JOIN restaurant_data on restaurant_data.id_resto = item_data.id_resto '
-//     mysql.execute(sql, [name, price, description, image, name_resto], (err, result, field)=>{
-//         res.send(result)
-//     })
-// })
-
-//     /* update cart */
-// router.put('/updatecart/:id', auth, role_user, (req,res)=> { 
-//     const id_cart = req.params.id
-//     const {id_user, id_item, name, price, quantity} = req.body
-//     const total = price * quantity
-//     const updated_on = new Date()
-//     const sql = `UPDATE cart SET id_user = ?, id_item = ?, name = ?, price = ?, quantity = ?, total = ? WHERE id_cart = ?`
-
-//         mysql.execute(sql, [id_user, id_item, name, price, quantity, total, updated_on], (err, result, field)=>{
-//             res.send(result)
-//                 })
-//     }) 
-
-    /* update review */
-// router.put('/updatereview/:name', auth, role_user, (req, res)=>{
-//     const {name} = req.params
-//     const {rating, review, updated_on} = req.body
-//     updated_on = new Date()
-//     const sql = `UPDATE review set rating = ?, review = ? WHERE name = ?`
-
-    
-// })
 
 module.exports = router

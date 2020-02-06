@@ -45,14 +45,15 @@ NODE_ENV=development node server.js
 * `/admin_app/infocategories`
 * `/admin_resto/itemdata/`(Get itemdata by id_resto = req.body)
 * `/admin_resto/restaurantdata` (Get restaurantdata by id_resto = req.body)
-* `/user/profile/` (Get profile by username = req.body)
-* `/user/menu` (Get menu by name_resto = req.body)
-* `/user/cart/` (Get profile by username = req.body)
-* `/user/checkout/` (Get checkout by username = req.body)
+* `/user/profile/:id_user` (Get profile by id_user)
+* `/user/menu/:id_resto` (Get menu by id_resto)
+* `/user/cart/:id_user` (Get profile by id_user)
+* `/user/checkout/:id_user` (Get checkout by id_user)
 * `/items/`
-* `/items/review/:name` (Get review by name)
-* `/items/details/:name/:name_resto` (Get review by name and name_resto)
-* `/items/category/:category` (Get category by category)
+* `/items/lisresto`
+* `/items/review/:id_item` (Get review by id_item)
+* `/items/details/:id_item` (Get review by id_item)
+* `/items/category/:id_category` (Get category by id_category)
 * `/items/page?page=1&limits=5`
 * `/items/search/asc?name=ayam&page=1&limits=5` (ASC or DESC)
 * `/items/sort/asc?name=true` (ASC or DESC)
@@ -117,6 +118,15 @@ NODE_ENV=development node server.js
 * `/admin_resto/update_admin/:id` (Update admin resto account by id)
     * ``` { "username": "ayampenyetsurabaya", "password": "admin" } ```
 
+* `/admin_app/forgotpassword`
+    * ``` { "username": "admin", "password": "admin" } ```
+
+* `/admin_resto/forgotpassword`
+    * ``` { "username": "ayampenyetsurabaya", "password": "admin" } ```
+
+* `/username/forgotpassword` 
+    * ``` { "username": "fikri", "password": "admin" } ```
+
 * `/admin_app/logout`
 
 * `/admin_resto/logout`
@@ -135,5 +145,4 @@ NODE_ENV=development node server.js
 * `/admin_app/role/:id` (Delete role by id)
 * `/admin_app/categories/:id` (Delete categories by id)
 * `/admin_resto/item/:id` (Delete item by id)
-* `/user/deletecart/:id` (Delete cart by id)
-* `/user/deleteitem/:id` (Delete item by id)
+* `/user/deleteitem/` (Delete item by id_item and id_user = req.body)

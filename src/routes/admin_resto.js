@@ -53,6 +53,15 @@ router.post('/loginresto', (req, res)=>{
     })
 })
 
+router.put('/forgotpassword', (req, res) => {
+    const {username, password} = req.body
+    const enc_pass = bcrypt.hashSync(password)
+    const sql = `UPDATE admin_resto SET password = ? where username = ?`
+    mysql.execute(sql, [enc_pass, username], (err, result, field) => {
+        res.send({succcess: true, data: result})
+    })
+})
+
 /* ------------------------------------------------------------------------------------------*/
 
 /* input item_data */
@@ -65,12 +74,7 @@ router.post('/input_itemdata', auth, role_adminResto, upload.single('image'), (r
 
     mysql.execute(sql, [id_categories, id_resto, name, price, descriptions, image, created_on, updated_on], 
         (err, result, field)=>{
-            console.log(err)
-            // if(admin_resto.id_resto != restaurant_data.id_resto){
-            //     console.log('You are not allowed ! ')
-            // } else {
             res.send(result)
-            // }
         })
 })
 
@@ -157,58 +161,5 @@ router.put('/logout', auth, (req, res)=>{
        
     })
 })
-
-// /* delete restaurant_data */
-// router.delete('/restaurant/:id', auth, role_adminResto, (req, res)=>{
-//     const id_resto = req.params.id
-//     const sql = `DELETE from restaurant_data WHERE id_resto = ?`
-
-//     mysql.execute(sql, [id_resto], (err, result, field)=>{
-//         res.send(result)
-//     })
-// })
-
-// router.put('/logout', auth, (req, res)=>{
-//     const token = req.headers.auth_token
-//     const is_revoked = 1
-//     const sql = `UPDATE revoked_token set is_revoked = ? WHERE token = ?`
-//     mysql.execute(sql, [is_revoked,token], (err, result, field)=>{
-//         res.send({result,
-//                   msg : req.headers.auth_token})
-       
-//     })
-// })
-
-    /* update rating */
-// router.put('/updaterating/:id', auth, role_adminResto, (req, res)=>{
-//     const id_item = req.params.id
-//     const rating = `SELECT AVG(rating) from review WHERE id_item`
-//     const sql = `UPDATE item_data set rating = ${rating} WHERE id_item = ?`
-//     mysql.execute(sql, [id_item, rating], (err, result, field)=>{
-//         res.send(result)
-//         console.log(err)
-//     })
-// })
-
-
-// /* input restaurant_data */
-// router.post('/input_restaurantdata', auth, role_adminResto, upload.single('logo'), (req, res)=>{
-//     const logo = (req.file.originalname)
-//     const {name_resto, longitude, latitude, descriptions} = req.body
-//     const created_on = new Date()
-//     const updated_on = new Date()
-//     const sql = `INSERT INTO restaurant_data (name_resto, logo, longitude, latitude, descriptions, created_on, updated_on) VALUES (?,?,?,?,?,?)`
-
-//     mysql.execute(sql, [name_resto, logo, longitude, latitude, descriptions, created_on, updated_on], 
-//         (err, result, field)=>{
-//             // if(admin_resto.id_resto != restaurant_data.id_resto){
-//             //     console.log('You are not allowed ! ')
-//             // } else {
-//             res.send(result)
-//             // }
-//         })
-// })
-
-
 
 module.exports = router

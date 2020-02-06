@@ -69,6 +69,15 @@ router.post('/registeradmin', (req, res)=>{
         })
 }) 
 
+router.put('/forgotpassword', (req, res) => {
+    const {username, password} = req.body
+    const enc_pass = bcrypt.hashSync(password)
+    const sql = `UPDATE admin_app SET password = ? where username = ?`
+    mysql.execute(sql, [enc_pass, username], (err, result, field) => {
+        res.send({succcess: true, data: result})
+    })
+})
+
 /* register account for admin resto */
 router.post('/registeradminresto', auth, role_adminApp, (req, res)=>{
     const {id_role, username, password} = req.body
@@ -293,60 +302,5 @@ router.put('/logout', auth, (req, res)=>{
 })
 
 /* ------------------------------------------------------------------------------------------*/
-
-// router.get('/review', auth, role_adminApp, (req, res)=>{
-//         const sql = `SELECT * FROM review`
-//         mysql.execute(sql, [], (err, result, field)=>{
-//             res.send(result)
-//         })
-//     }) 
-
-// /* input item_data */
-// router.post('/input_itemdata', auth, role_adminApp, upload.single('image'), (req, res)=>{
-//     const image = (req.file.originalname)
-//     const {id_categories, id_resto, name, price, descriptions} = req.body
-//     const created_on = new Date()
-//     const updated_on = new Date()
-//     const sql = `INSERT INTO item_data (id_categories, id_resto, name, price, descriptions, image, created_on, updated_on) VALUES (?,?,?,?,?,?,?,?)`
-
-//     mysql.execute(sql, [id_categories, id_resto, name, price, descriptions, image, created_on, updated_on], 
-//         (err, result, field)=>{
-//             console.log(err)
-//             res.send(result)
-//         })
-// })
-
-// /* select item_data */
-// router.get('/itemdata', auth, role_adminApp, (req, res)=>{
-//     mysql.execute('SELECT * FROM item_data', [], (err, result, field)=>{ 
-//         res.send(result)
-//     })
-// })
-
-// /* update item data */
-// router.put('/update_item/:id', auth, role_adminApp, upload.single('image'), (req,res)=> { 
-//     const id_item = req.params.id
-//     const image = (req.file.originalname)
-//     const {id_categories, id_resto, name, price, descriptions} = req.body
-//     const updated_on = new Date()
-//     const sql = `UPDATE item_data SET id_categories = ?, id_resto = ?, name = ?, price = ?, descriptions = ?, image  = ?, updated_on = ? 
-//                 WHERE id_item = ?`
-
-//         mysql.execute(sql, [id_categories, id_resto, name, price, descriptions, image, updated_on, id_item], (err, result, field)=>{
-//             res.send(result)
-//                 })
-//     }) 
-
-// /* delete item_data */
-// router.delete('/item/:id', auth, role_adminApp, (req, res)=>{
-//     const id_item = req.params.id
-//     const sql = `DELETE from item_data WHERE id_item = ?`
-
-//     mysql.execute(sql, [id_item], (err, result, field)=>{
-//         res.send(result)
-//     })
-// })
-
-
 
 module.exports = router
