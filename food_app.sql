@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 06 Feb 2020 pada 11.54
+-- Generation Time: 09 Feb 2020 pada 04.35
 -- Versi Server: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
   `quantity` int(20) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_on` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
 
 --
 -- Dumping data untuk tabel `cart`
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `item_data` (
   `rating` int(10) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_on` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data untuk tabel `item_data`
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `restaurant_data` (
   `descriptions` varchar(100) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_on` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data untuk tabel `restaurant_data`
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `revoked_token` (
   `is_revoked` int(20) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_on` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=129 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=134 ;
 
 --
 -- Dumping data untuk tabel `revoked_token`
@@ -326,9 +326,14 @@ INSERT INTO `revoked_token` (`id_token`, `token`, `is_revoked`, `created_on`, `u
 (123, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsImlhdCI6MTU4MDk3NzE4Mn0.vHbnjBx401mk6-9FNu3grNyLtpqMFFxbX5y7KLlMfdA', 0, '2020-02-06 08:19:42', '2020-02-06 08:19:42'),
 (124, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgyOTA4fQ.RWYYhkIgqAyV_SXin_zpEgWcmIgjamtHgrs1s4a4qRs', 1, '2020-02-06 10:02:00', '2020-02-06 09:55:08'),
 (125, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgzMzgzfQ.XwGj-sz78nT7FqUyUbtmv4vFCDyAxbtDWrteRvR3Q3A', 1, '2020-02-06 10:03:32', '2020-02-06 10:03:04'),
-(126, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgzNTYyfQ.B_tdV50lXh3HBrjo_2U3yQbng_Z3TR9nM5B2lU13b4Y', 0, '2020-02-06 10:06:03', '2020-02-06 10:06:03'),
+(126, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgzNTYyfQ.B_tdV50lXh3HBrjo_2U3yQbng_Z3TR9nM5B2lU13b4Y', 1, '2020-02-06 14:57:08', '2020-02-06 10:06:03'),
 (127, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgzNjQyfQ.sRr2IHf574Ma0aHLQWwcqPcWLPg-fVwg7Q2O_-fJNLQ', 1, '2020-02-06 10:07:35', '2020-02-06 10:07:22'),
-(128, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgzODg2fQ.DgbtbdLANwkOfE5ibCx8mvaT83sBiC_AOgHhY1UZMtM', 1, '2020-02-06 10:11:37', '2020-02-06 10:11:27');
+(128, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgwOTgzODg2fQ.DgbtbdLANwkOfE5ibCx8mvaT83sBiC_AOgHhY1UZMtM', 1, '2020-02-06 10:11:37', '2020-02-06 10:11:27'),
+(129, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgxMTQ4NDUwfQ.H3xcYqp3oC7JvOZLSkDX74dg71WsnSEf6NsSniuOL_c', 1, '2020-02-08 11:18:29', '2020-02-08 07:54:11'),
+(130, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgxMTUwMTA2fQ.AZdaXjcQ1-Me1F86RCjUFMGadA-gYBszu9l3tAHKdVk', 0, '2020-02-08 08:21:46', '2020-02-08 08:21:46'),
+(131, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZpa3JpIiwiaWQiOjIsInJvbGVzIjozLCJpYXQiOjE1ODExNjA3MjR9.prdZ9wwnMoZg5l0CtWPxXhcNycy8caFWbr-sbbMWu6g', 1, '2020-02-08 11:20:23', '2020-02-08 11:18:44'),
+(132, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZpa3JpIiwiaWQiOjIsInJvbGVzIjozLCJpYXQiOjE1ODExNjA4OTZ9.DHO5j0kEYEMhOgHhwKf98jT5R1dF25UBO02G5ziUO4c', 1, '2020-02-08 11:21:50', '2020-02-08 11:21:37'),
+(133, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ2hpZmFyaSIsImlkIjozLCJyb2xlcyI6MywiaWF0IjoxNTgxMTgzMjIwfQ.ZHPLwKTz2OQ-1fDkAse5_tbothf33Nn6DL1JKx6CeC4', 1, '2020-02-09 02:48:53', '2020-02-08 17:33:40');
 
 -- --------------------------------------------------------
 
@@ -359,20 +364,21 @@ INSERT INTO `roles` (`id_role`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `user` (
 `id_user` int(10) NOT NULL,
   `id_role` int(10) NOT NULL,
+  `image` varchar(50) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_on` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data untuk tabel `user`
 --
 
-INSERT INTO `user` (`id_user`, `id_role`, `username`, `password`, `created_on`, `updated_on`) VALUES
-(1, 3, 'alghifarifikri', '$2a$10$wWdirUzwkhRiKjKB.msQZuF8MVbQ665X584.rTDCwK2xRI83bvV4y', '2019-12-30 08:16:08', '2019-12-30 08:16:09'),
-(2, 3, 'fikri', '$2a$10$wPNHzCxFO6Be2m/YJ9p4/ergFPbdiBi9qExybW588TmDIHsva4jgq', '2019-12-30 01:25:31', '2019-12-30 01:25:31'),
-(3, 3, 'alghifari', '$2a$10$doYqhOfmJl7s.rI3M5fRze5bBMjMp5OYH8hVypu6ChIyPVZvIPhrG', '2020-02-06 10:10:50', '2019-12-30 03:59:49');
+INSERT INTO `user` (`id_user`, `id_role`, `image`, `username`, `password`, `created_on`, `updated_on`) VALUES
+(1, 3, '', 'alghifarifikri', '$2a$10$wWdirUzwkhRiKjKB.msQZuF8MVbQ665X584.rTDCwK2xRI83bvV4y', '2019-12-30 08:16:08', '2019-12-30 08:16:09'),
+(2, 3, '1579624696353.jpg', 'fikri', '$2a$10$wPNHzCxFO6Be2m/YJ9p4/ergFPbdiBi9qExybW588TmDIHsva4jgq', '2020-02-08 11:20:14', '2019-12-30 01:25:31'),
+(3, 3, 'smile-icon-256.png', 'alghifari', '$2a$10$doYqhOfmJl7s.rI3M5fRze5bBMjMp5OYH8hVypu6ChIyPVZvIPhrG', '2020-02-08 11:09:15', '2019-12-30 03:59:49');
 
 --
 -- Indexes for dumped tables
@@ -456,7 +462,7 @@ MODIFY `id_resto` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-MODIFY `id_cart` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
+MODIFY `id_cart` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT for table `categories`
 --
@@ -466,12 +472,12 @@ MODIFY `id_categories` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 -- AUTO_INCREMENT for table `item_data`
 --
 ALTER TABLE `item_data`
-MODIFY `id_item` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=27;
+MODIFY `id_item` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `restaurant_data`
 --
 ALTER TABLE `restaurant_data`
-MODIFY `id_resto` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `id_resto` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `review`
 --
@@ -481,7 +487,7 @@ MODIFY `id_review` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
 -- AUTO_INCREMENT for table `revoked_token`
 --
 ALTER TABLE `revoked_token`
-MODIFY `id_token` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=129;
+MODIFY `id_token` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=134;
 --
 -- AUTO_INCREMENT for table `roles`
 --
@@ -491,7 +497,7 @@ MODIFY `id_role` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-MODIFY `id_user` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `id_user` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

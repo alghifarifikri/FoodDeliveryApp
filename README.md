@@ -71,6 +71,7 @@ NODE_ENV=development node server.js
 
 * `/admin_app/input_restaurantdata`
     * ``` { "name_resto": "Ayam Penyet Surabaya", "logo": "(upload).jpg", "longitude" : "2222dfds2222asas", "latitude" : "fbisjdjbf", "descriptions" : "blablabla" } ``` 
+* `/user/input_image`
 
 * `/admin_app/role`
     * ``` { "name": "admin" } ```

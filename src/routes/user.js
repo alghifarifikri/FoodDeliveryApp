@@ -3,6 +3,16 @@ const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const mysql = require('../dbconfig')
+const multer = require('multer')
+const storage = multer.diskStorage(
+    {destination : function(req, file, cb){
+        cb(null, './storage/image')
+    },
+    filename : function(req, file, cb){
+        cb(null, file.originalname)
+    }
+})
+var upload = multer({storage:storage})
 const {auth, role_user} = require('../middleware') 
 
 /* login for user */
@@ -73,6 +83,16 @@ router.post('/register', (req, res)=>{
         })
 })
 
+router.post('/input_image/:id_user', auth, upload.single('image'), (req, res)=>{
+    const {id_user} = req.params
+    const image = (req.file.originalname)
+    const sql = `UPDATE USER set image = ? WHERE id_user = ?`
+    mysql.execute(sql, [image, id_user], 
+        (err, result, field)=>{
+            res.send({success: true, data: result})
+        })
+})
+
 router.put('/forgotpassword', (req, res) => {
     const {username, password} = req.body
     const enc_pass = bcrypt.hashSync(password)
@@ -129,7 +149,7 @@ router.post('/inputreview', auth, (req, res)=>{
 /* select info profile */
 router.get('/profile/:id_user', (req, res)=>{
     const {id_user} = req.params
-    mysql.execute('SELECT username, password FROM user WHERE id_user = ?', [id_user], (err, result, field)=>{ 
+    mysql.execute('SELECT image, username, password FROM user WHERE id_user = ?', [id_user], (err, result, field)=>{ 
         res.send({data : result})
     })
 })
