@@ -69,6 +69,7 @@ router.post('/register', (req, res)=>{
             if(resuld == ''){
                 const sql1 = `INSERT INTO user (id_role, username, password, created_on, updated_on) VALUES (?,?,?,?,?)`
                 mysql.execute(sql1, ['3', username, enc_pass, created_on, updated_on], (err, result, field)=>{
+                    console.log(err)
                     res.send({
                         success : true,
                         msg : 'Register Success'
