@@ -87,7 +87,7 @@ router.post('/register', (req, res)=>{
 router.post('/input_image/:id_user', auth, upload.single('image'), (req, res)=>{
     const {id_user} = req.params
     const image = (req.file.originalname)
-    const sql = `UPDATE USER set image = ? WHERE id_user = ?`
+    const sql = `UPDATE user set image = ? WHERE id_user = ?`
     mysql.execute(sql, [image, id_user], 
         (err, result, field)=>{
             console.log(err)
