@@ -90,6 +90,7 @@ router.post('/input_image/:id_user', auth, upload.single('image'), (req, res)=>{
     const sql = `UPDATE USER set image = ? WHERE id_user = ?`
     mysql.execute(sql, [image, id_user], 
         (err, result, field)=>{
+            console.log(err)
             res.send({success: true, data: result})
         })
 })
