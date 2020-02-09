@@ -1,7 +1,7 @@
 require('dotenv').config()
 const mysql = require('mysql2')
 
-const {DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE} = process.env //meleburkan objek menjadi variabel (Array Destruction)
+const {DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE} = process.env
 
 const config = {
     host : DB_SERVER,
