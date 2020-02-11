@@ -31,7 +31,7 @@ PORT=4040
 HOST=localhost
 USER=root // default
 PASS= // default
-DATABASE=food_app
+DATABASE=food_app_API
 NODE_ENV=development node server.js
 ```
 

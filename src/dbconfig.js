@@ -10,6 +10,8 @@ const config = {
     database : DB_DATABASE
 }
 
+console.log(config)
+
 const myconn = mysql.createConnection(config)
 
 module.exports = myconn
