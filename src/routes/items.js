@@ -84,8 +84,8 @@ router.get('/page', (req, res)=>{
             res.send({
                 data : result, 
                 pages,
-                Prev : `http://54.89.87.221:4040/items/page?page=${prev}&limits=5`,
-                Next : `http://54.89.87.221:4040/items/page?page=${next}&limits=5`
+                Prev : `http://3.90.3.168:4040/items/page?page=${prev}&limits=5`,
+                Next : `http://3.90.3.168:4040/items/page?page=${next}&limits=5`
                 
             }) 
         })
@@ -102,8 +102,8 @@ router.get('/page', (req, res)=>{
             res.send({
                 data : result, 
                 pages,
-                Prev : `http://54.89.87.221:4040/items/page?page=${prev}&limits=5`,
-                Next : `http://54.89.87.221:4040/items/page?page=${next}&limits=5`
+                Prev : `http://3.90.3.168:4040/items/page?page=${prev}&limits=5`,
+                Next : `http://3.90.3.168:4040/items/page?page=${next}&limits=5`
                 
             })   
         }) 
@@ -113,7 +113,7 @@ router.get('/page', (req, res)=>{
 /* ====================================================================================================== */
 
 router.get('/searching', (req, res) => {
-    const url ='http://54.89.87.221:4040/items/'
+    const url ='http://3.90.3.168:4040/items/'
     const query = req.query
     let where = ''
     let sort = ''
@@ -247,8 +247,8 @@ router.get('/search/asc', (req, res)=>{
                 res.send({
                     data : result, 
                     pages,
-                    Prev : `http://54.89.87.221:4040/items/search/asc?name=${name}&page=${prev}&limits=5`,
-                    Next : `http://54.89.87.221:4040/items/search/asc?name=${name}&page=${next}&limits=5`
+                    Prev : `http://3.90.3.168:4040/items/search/asc?name=${name}&page=${prev}&limits=5`,
+                    Next : `http://3.90.3.168:4040/items/search/asc?name=${name}&page=${next}&limits=5`
                     
                 }) 
         })
@@ -264,8 +264,8 @@ router.get('/search/asc', (req, res)=>{
                 res.send({
                     data : result, 
                     pages,
-                    Prev : `http://54.89.87.221:4040/items/search/asc?name=${name}&page=${prev}&limits=5`,
-                    Next : `http://54.89.87.221:4040/items/search/asc?name=${name}&page=${next}&limits=5`
+                    Prev : `http://3.90.3.168:4040/items/search/asc?name=${name}&page=${prev}&limits=5`,
+                    Next : `http://3.90.3.168:4040/items/search/asc?name=${name}&page=${next}&limits=5`
                     
                 })  
        })
