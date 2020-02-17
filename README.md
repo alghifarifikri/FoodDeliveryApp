@@ -19,9 +19,9 @@ Express.js is a web application framework for Node.js. [More about Express](http
 2. Type `npm install`
 3. Make new file a called **.env**, set up first [here](#set-up-env-file)
 4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
-5. Create a database with the name food_app, and Import file [food_app.sql](food_app.sql) to **phpmyadmin**
+5. Create a database with the name food_app, and Import file [food_app_API.sql](food_app_API.sql) to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
-7. Choose HTTP Method and enter request url.(ex. localhost:3000/notes)
+7. Choose HTTP Method and enter request url.(ex. localhost:4040/notes)
 8. You can see all the end point [here](#end-point)
 
 ## Set up .env file
@@ -31,7 +31,7 @@ PORT=4040
 HOST=localhost
 USER=root // default
 PASS= // default
-DATABASE=food_app
+DATABASE=food_app_API
 NODE_ENV=development node server.js
 ```
 
